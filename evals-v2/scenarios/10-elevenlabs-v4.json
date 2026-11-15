@@ -1,0 +1,17 @@
+{
+"name": "10-elevenlabs-v4",
+"query": "Write me an ElevenLabs prompt (Eleven v4) to narrate this line in a calm, intimate voice, with a pause after the first sentence and a whispered ending: \"We built this for the people who never asked for a spotlight. Here is the next chapter.\"",
+"files": {},
+"checks": [
+  {"id": "reads_visual", "what": "reads tools-visual.md", "type": "reads", "path": "references/tools-visual.md"},
+  {"id": "only_visual", "what": "reads neither tools-llm nor tools-agentic", "type": "not_reads", "pattern": "tools-(llm|agentic)"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "keeps_text", "what": "the spoken line is kept word for word", "type": "in_prompt", "regex": "We built this for the people who never asked for a spotlight"},
+  {"id": "no_ssml", "what": "no <break> tag, v4 does not support it", "type": "not_in_prompt", "regex": "<break"},
+  {"id": "whisper_tag", "what": "a [whisper...] audio tag", "type": "in_prompt", "regex": "\\[whisper"},
+  {"id": "tags_ok", "what": "every bracketed tag is documented in params.md", "type": "brackets_in_params"},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target: and names ElevenLabs", "type": "after_block", "starts": "🎯 Target:", "contains": "ElevenLabs"},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"},
+  {"id": "speed_ok", "what": "any speed value stated lies between 0.7 and 1.2, or none is stated", "type": "judge"}
+]
+}

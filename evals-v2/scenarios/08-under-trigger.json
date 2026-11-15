@@ -1,0 +1,19 @@
+{
+"name": "08-under-trigger",
+"query": "améliore ce prompt stp, c'est pour ChatGPT :\n\n\"Tu es un assistant. Analyse le marché des apps de productivité pour étudiants et dis-moi si mon idée est bonne, fais aussi un plan marketing. Sois exhaustif et professionnel. Utilise tes connaissances du secteur. C'est urgent.\"",
+"files": {},
+"checks": [
+  {"id": "invoked", "what": "skill invoked without being named", "legacy": 1, "type": "skill_invoked"},
+  {"id": "reads_llm", "what": "reads tools-llm.md", "legacy": 2, "type": "reads", "path": "references/tools-llm.md"},
+  {"id": "no_visual", "what": "does not read tools-visual.md", "legacy": 3, "type": "not_reads", "pattern": "tools-visual"},
+  {"id": "target_line", "what": "a 🎯 Target: line names ChatGPT", "legacy": 4, "type": "target_line", "contains": "ChatGPT"},
+  {"id": "two_blocks", "what": "exactly two fenced blocks", "legacy": 5, "type": "blocks", "n": 2},
+  {"id": "labels", "what": "Prompt 1 then Prompt 2", "legacy": 5, "type": "in_response", "regex": "Prompt 1[\\s\\S]*Prompt 2"},
+  {"id": "digit_unit", "what": "prompts hold a digit followed by a length unit (English or French)", "legacy": 8, "type": "digit_unit"},
+  {"id": "no_tu_es", "what": "prompts lack 'Tu es un assistant'", "legacy": 9, "type": "not_in_prompt", "regex": "Tu es un assistant\\s*[.,\\n]"},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "legacy": 10, "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"},
+  {"id": "questions", "what": "at most 3 questions", "legacy": 11, "type": "max_questions", "n": 3},
+  {"id": "order_line", "what": "one line states which order to run the two prompts in", "legacy": 6, "type": "judge"},
+  {"id": "grounding", "what": "prompts tell the model not to fabricate figures or sources", "legacy": 7, "type": "judge"}
+]
+}

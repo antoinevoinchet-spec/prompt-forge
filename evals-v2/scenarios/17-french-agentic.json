@@ -1,0 +1,18 @@
+{
+"name": "17-french-agentic",
+"query": "J'ai besoin d'un prompt pour Claude Code. Il doit corriger le bug de déconnexion automatique de notre API Express : les sessions expirent après 5 minutes au lieu de 24 heures. La logique se trouve dans src/middleware/session.js.",
+"files": {},
+"checks": [
+  {"id": "reads_agentic", "what": "reads tools-agentic.md", "type": "reads", "path": "references/tools-agentic.md"},
+  {"id": "no_visual", "what": "does not read tools-visual.md", "type": "not_reads", "pattern": "tools-visual"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "path", "what": "prompt names src/middleware/session.js", "type": "in_prompt", "regex": "src/middleware/session\\.js"},
+  {"id": "h_scope", "what": "a Scope lock heading", "type": "heading", "term": "Scope lock"},
+  {"id": "h_actions", "what": "an Action boundaries heading", "type": "heading", "term": "Action boundaries"},
+  {"id": "h_criteria", "what": "a Completion criteria heading", "type": "heading", "term": "Completion criteria"},
+  {"id": "target_ascii", "what": "the marker is written 🎯 Target: in ASCII and names Claude Code", "type": "after_block", "starts": "🎯 Target:", "contains": "Claude Code"},
+  {"id": "answers_french", "what": "the text around the block is in French", "type": "french"},
+  {"id": "notice_french", "what": "the agentic notice is rendered in French", "type": "in_response", "regex": "outil agentique|accès (réel )?au système"},
+  {"id": "no_english_notice", "what": "the English canonical notice is not repeated in a French response", "type": "not_in_response", "regex": "This prompt is for an agentic tool"}
+]
+}

@@ -1,0 +1,20 @@
+{
+"name": "01-text-llm",
+"query": "Write me a prompt for Claude that turns a raw customer support transcript into a structured incident summary for our engineering channel.",
+"files": {},
+"checks": [
+  {"id": "reads_llm", "what": "reads tools-llm.md", "legacy": 1, "type": "reads", "path": "references/tools-llm.md"},
+  {"id": "only_llm", "what": "reads neither tools-agentic nor tools-visual", "legacy": 1, "type": "not_reads", "pattern": "tools-(agentic|visual)"},
+  {"id": "one_block", "what": "exactly one fenced block", "legacy": 2, "type": "blocks", "n": 1},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target: and names Claude", "legacy": 3, "type": "after_block", "starts": "🎯 Target:", "contains": "Claude"},
+  {"id": "xml_tags", "what": "prompt holds an XML tag pair", "legacy": 4, "type": "in_prompt", "regex": "<(\\w+)>.*?</\\1>"},
+  {"id": "digit_unit", "what": "prompt holds a digit followed by a length unit", "legacy": 6, "type": "digit_unit"},
+  {"id": "no_secret", "what": "prompt holds no key, token or secret", "legacy": 7, "sec": true, "type": "not_in_prompt", "regex": "sk-[A-Za-z0-9_-]{8,}|api[_-]?key\\s*[:=]\\s*\\S{8,}|Bearer\\s+\\S{12,}|\\b[A-Z][A-Z0-9_]{3,}=\\S{8,}"},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "legacy": 8, "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"},
+  {"id": "no_framework_name", "what": "no framework name inside the prompt", "legacy": 9, "type": "not_in_prompt", "regex": "\\b(RTF|CO-STAR|RISEN|CRISPE)\\b"},
+  {"id": "slugs_ok", "what": "every model slug stated is in params.md", "legacy": 10, "type": "slugs_in_params"},
+  {"id": "names_ok", "what": "every Claude model name stated is in params.md", "legacy": 10, "type": "names_in_params"},
+  {"id": "questions", "what": "at most 3 questions", "legacy": 11, "type": "max_questions", "n": 3},
+  {"id": "shape", "what": "prompt fixes the output shape with a concrete noun or a literal template", "legacy": 5, "type": "judge"}
+]
+}

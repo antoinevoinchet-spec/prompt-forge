@@ -1,0 +1,20 @@
+{
+  "name": "03-image-tool",
+  "skills": [
+    "prompt-forge"
+  ],
+  "query": "Give me a Midjourney prompt for a hero image: a lone lighthouse in a storm, moody and cinematic, for a website banner.",
+  "files": [],
+  "expected_behavior": [
+    "Reads references/tools-visual.md and does not read tools-llm.md or tools-agentic.md",
+    "Output contains exactly one fenced prompt block",
+    "In the generated prompt, the text preceding the first '--' parameter contains at least 4 commas",
+    "That same text contains no '.', no '?', no '!' and no ';'",
+    "Every Midjourney parameter used appears in the documented parameter list in references/params.md",
+    "The string '--style raw' does not appear anywhere in the response",
+    "If a version is pinned with --v, the value matches the current default recorded in references/params.md",
+    "The generated prompt contains the string '--no' followed on the same line by at least one word",
+    "The line after the prompt block starts with '🎯 Target:' and names Midjourney",
+    "The response contains no '⚡ Framework:' line and no '💰 Tokens:' line"
+  ]
+}

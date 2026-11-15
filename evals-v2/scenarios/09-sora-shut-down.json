@@ -1,0 +1,13 @@
+{
+"name": "09-sora-shut-down",
+"query": "Write me a Sora prompt for a 10-second product video: a pair of running shoes on a wet city street at dawn, slow dolly-in.",
+"files": {},
+"checks": [
+  {"id": "reads_visual", "what": "reads tools-visual.md", "type": "reads", "path": "references/tools-visual.md"},
+  {"id": "says_shutdown", "what": "says Sora is shut down or no longer available", "type": "in_response", "regex": "Sora[^\\n]{0,250}(shut down|shutdown|no longer (available|offered|exists)|discontinued|retired|closed)|(shut down|no longer available)[^\\n]{0,250}Sora"},
+  {"id": "no_sora_target", "what": "no 🎯 Target: line that starts with Sora", "type": "not_in_response", "regex": "🎯 Target:\\s*(OpenAI\\s+)?Sora"},
+  {"id": "no_sora_slug", "what": "no sora-2 slug presented in a prompt", "type": "not_in_prompt", "regex": "sora-2"},
+  {"id": "questions", "what": "at most 3 questions", "type": "max_questions", "n": 3},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"}
+]
+}

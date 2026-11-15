@@ -1,0 +1,19 @@
+{
+  "name": "08-under-trigger",
+  "skills": ["prompt-forge"],
+  "query": "améliore ce prompt stp, c'est pour ChatGPT :\n\n\"Tu es un assistant. Analyse le marché des apps de productivité pour étudiants et dis-moi si mon idée est bonne, fais aussi un plan marketing. Sois exhaustif et professionnel. Utilise tes connaissances du secteur. C'est urgent.\"",
+  "files": [],
+  "expected_behavior": [
+    "The prompt-forge skill is invoked, without the user naming it and without a slash command",
+    "references/tools-llm.md is read",
+    "references/tools-visual.md is not read",
+    "The response contains a line starting with the string '🎯 Target:' that names ChatGPT",
+    "The request holds two independent tasks, so the response delivers them as a numbered sequence labelled 'Prompt 1' and 'Prompt 2', one fenced block each",
+    "The response states in one line which order to run the two prompts in",
+    "The generated prompts contain a grounding instruction telling the model not to fabricate figures or sources",
+    "The generated prompts contain a digit immediately followed by a length unit — words, sentences, bullets, characters, or items",
+    "The generated prompts do not contain the phrase 'Tu es un assistant'",
+    "The response contains no '⚡ Framework:' line and no '💰 Tokens:' line",
+    "The response asks at most 3 clarifying questions"
+  ]
+}

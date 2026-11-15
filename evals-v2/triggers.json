@@ -1,0 +1,22 @@
+[
+ {"id":"t01","expect":"trigger","query":"I need a prompt for Claude Code that migrates our Jest tests to Vitest. The tests live in src/__tests__."},
+ {"id":"t02","expect":"trigger","query":"fais-moi un prompt pour ChatGPT qui m'aide à répondre plus vite à mes mails clients"},
+ {"id":"t03","expect":"trigger","query":"Here's my prompt, it keeps giving me vague answers. Can you make it better?\n\n\"Write a good blog post about our product. Make it engaging.\""},
+ {"id":"t04","expect":"trigger","query":"j'ai besoin d'un prompt Midjourney pour une affiche de concert de jazz, style années 50"},
+ {"id":"t05","expect":"no_trigger","note":"shortening is not a prompt-forge flow: Claude does it directly (first measurement expected a trigger and got 0 of 3)","query":"Shorten this prompt without losing anything important: \"You are an expert marketing consultant with 20 years of experience. I would like you to please write me a LinkedIn post announcing our new feature, which is a dashboard. It should be professional but also friendly, and it should not be too long, maybe around 100 words, and please include a call to action at the end.\""},
+ {"id":"t06","expect":"trigger","query":"adapte ce prompt pour Gemini : \"Tu es un traducteur. Traduis le texte suivant en anglais en gardant le ton.\""},
+ {"id":"t07","expect":"trigger","note":"borderline: no named tool, but a system prompt for an app is a prompt to write, even with no tool named","query":"Write the system prompt for the support chatbot in my SaaS app. It should answer billing questions and escalate refunds to a human."},
+ {"id":"t08","expect":"trigger","query":"un prompt pour ElevenLabs : voix off chaleureuse de 30 secondes pour une pub de café"},
+ {"id":"t09","expect":"trigger","query":"Rewrite this for Cursor: \"fix the bug in login\""},
+ {"id":"t10","expect":"trigger","query":"Can you improve this prompt for Sora? \"a cat on a roof at sunset\""},
+ {"id":"n01","expect":"no_trigger","query":"My React component re-renders on every keystroke. Here is the code: function Search(){ const [q,setQ]=useState(''); const results=expensiveFilter(q); return <input value={q} onChange={e=>setQ(e.target.value)}/>; } What is wrong?"},
+ {"id":"n02","expect":"no_trigger","note":"theory question","query":"Explain what chain-of-thought prompting is and when it helps."},
+ {"id":"n03","expect":"no_trigger","query":"Résume ce texte en 3 phrases : « Les abeilles jouent un rôle central dans la pollinisation. Leur déclin menace les cultures. Plusieurs pays ont interdit certains pesticides. »"},
+ {"id":"n04","expect":"no_trigger","query":"Write a short poem about autumn rain."},
+ {"id":"n05","expect":"no_trigger","note":"a neighbouring skill (pptx) fits","query":"Create a 5-slide pptx deck presenting our Q3 results: revenue 1.2M, up 14%."},
+ {"id":"n06","expect":"no_trigger","note":"a neighbouring skill (xlsx) fits","query":"Fais-moi un tableau Excel de budget mensuel avec revenus, loyer, courses et épargne."},
+ {"id":"n07","expect":"no_trigger","query":"Translate to English: « Nous vous remercions de votre confiance et restons à votre disposition. »"},
+ {"id":"n08","expect":"no_trigger","note":"model question, not a prompt request","query":"What's the difference between Claude Sonnet and Opus for coding tasks?"},
+ {"id":"n09","expect":"no_trigger","note":"performs the underlying task instead of writing a prompt","query":"Exécute ce prompt et donne-moi le résultat : « Liste 5 idées de noms pour une boulangerie à Lyon. »"},
+ {"id":"n10","expect":"no_trigger","query":"Write a Python script that renames all .jpeg files in a folder to .jpg."}
+]

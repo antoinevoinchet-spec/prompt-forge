@@ -1,0 +1,19 @@
+{
+"name": "16-french-long",
+"query": "Écris-moi un prompt pour Claude qui prend les comptes rendus de réunion que je lui colle (souvent longs, en français, parfois avec des fautes de frappe) et en tire : les décisions prises, les actions avec le responsable et l'échéance, et les points laissés en suspens. Le résultat doit être court et lisible dans un mail de suivi envoyé à toute l'équipe.",
+"files": {},
+"checks": [
+  {"id": "reads_llm", "what": "reads tools-llm.md", "type": "reads", "path": "references/tools-llm.md"},
+  {"id": "only_llm", "what": "reads neither tools-agentic nor tools-visual", "type": "not_reads", "pattern": "tools-(agentic|visual)"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "target_ascii", "what": "the marker is written 🎯 Target: in ASCII and names Claude", "type": "after_block", "starts": "🎯 Target:", "contains": "Claude"},
+  {"id": "answers_french", "what": "the text around the block is in French", "type": "french"},
+  {"id": "xml_tags", "what": "prompt holds an XML tag pair", "type": "in_prompt", "regex": "<(\\w+)>.*?</\\1>"},
+  {"id": "digit_unit", "what": "prompt holds a digit followed by a length unit", "type": "digit_unit"},
+  {"id": "no_notice", "what": "no agentic notice for a text-only target", "type": "not_in_response", "regex": "agentic tool|outil agentique"},
+  {"id": "slugs_ok", "what": "every model slug stated is in params.md", "type": "slugs_in_params"},
+  {"id": "questions", "what": "at most 3 questions", "type": "max_questions", "n": 3},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"},
+  {"id": "target_sentence_french", "what": "the sentence after '🎯 Target: Claude' is written in French", "type": "judge"}
+]
+}

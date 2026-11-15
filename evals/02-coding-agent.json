@@ -1,0 +1,22 @@
+{
+  "name": "02-coding-agent",
+  "skills": [
+    "prompt-forge"
+  ],
+  "query": "I need a prompt for Claude Code. It should fix the session timeout bug in our Express API — sessions expire after 5 minutes instead of 24 hours. The logic lives in src/middleware/session.js.",
+  "files": [],
+  "expected_behavior": [
+    "Reads references/tools-agentic.md and does not read tools-visual.md",
+    "The turn reads at most two references/tools-*.md files in total",
+    "Output contains exactly one fenced prompt block",
+    "The generated prompt names the path src/middleware/session.js",
+    "The generated prompt contains a scope lock section listing what may be touched and what must be left unchanged",
+    "The generated prompt contains an action boundaries section naming at least one action the agent must ask about before performing",
+    "The generated prompt contains a section whose heading includes the glossary term 'Completion criteria'",
+    "That section lists at least 2 items, and each item names one of: a file path that must exist, a command or test that must pass, a named value that must equal a stated value, or an endpoint that must return a stated response",
+    "The generated prompt instructs the agent to report progress evidence grounded in tool results or changed files",
+    "The response appends the agentic output notice beginning 'This prompt is for an agentic tool with real system access'",
+    "The generated prompt does not instruct the model to reveal its chain of thought or private reasoning",
+    "The generated prompt does not set a thinking budget in tokens"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+"name": "11-n8n-workflow",
+"query": "Write me a prompt for n8n: when a new row is added in a Google Sheet, send a Slack message to #sales with the company name and deal size, and log it in Notion.",
+"files": {},
+"checks": [
+  {"id": "reads_visual", "what": "reads tools-visual.md", "type": "reads", "path": "references/tools-visual.md"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "numbered_steps", "what": "numbered steps", "type": "in_prompt", "regex": "(?m)^\\s*1[.)]\\s"},
+  {"id": "auth_assumed", "what": "states that apps are already connected or authenticated", "type": "in_prompt", "regex": "already (connected|authenticated|authorized|set up)|assumes[^\\n]{0,60}(connected|authenticated)"},
+  {"id": "no_secret", "what": "prompt holds no key, token or secret", "sec": true, "type": "not_in_prompt", "regex": "sk-[A-Za-z0-9_-]{8,}|api[_-]?key\\s*[:=]\\s*\\S{8,}|Bearer\\s+\\S{12,}|\\b[A-Z][A-Z0-9_]{3,}=\\S{8,}"},
+  {"id": "says_unverified", "what": "tells the user n8n details are unverified", "type": "in_response", "regex": "unverified|not verified|could not (verify|confirm)|couldn.t (verify|confirm)|no official|haven.t verified|not been verified"},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target: and names n8n", "type": "after_block", "starts": "🎯 Target:", "contains": "n8n"},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"},
+  {"id": "data_passed", "what": "the prompt names the fields or values handed from one step to the next, wherever a step feeds another", "type": "judge"}
+]
+}

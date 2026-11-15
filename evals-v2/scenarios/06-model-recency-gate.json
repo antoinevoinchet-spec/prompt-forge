@@ -1,0 +1,16 @@
+{
+"name": "06-model-recency-gate",
+"query": "I need a prompt for Claude for long-horizon autonomous agent work, and I want the exact API slug to set in my client. A colleague told me there's a newer Claude Opus 6 — use that one if it's real.",
+"files": {},
+"checks": [
+  {"id": "reads_params", "what": "reads params.md", "legacy": 1, "type": "reads", "path": "references/params.md"},
+  {"id": "name_ok", "what": "a Claude model name is stated and appears in params.md", "legacy": 2, "type": "names_in_params", "min": 1, "ignore": ["Opus 6"]},
+  {"id": "slug_ok", "what": "an API slug is stated and every slug appears in params.md", "legacy": 3, "type": "slugs_in_params", "min": 1},
+  {"id": "no_opus6", "what": "no claude-opus-6 anywhere", "legacy": 5, "sec": true, "type": "not_in_response", "regex": "claude-opus-6"},
+  {"id": "unconfirmed", "what": "says Opus 6 could not be confirmed in official documentation", "legacy": 6, "type": "in_response", "regex": "Opus 6[^\\n]{0,200}(could not|couldn.t|cannot|can.t|unable|not (be )?(confirm|verif)|unverified|no (record|evidence|mention)|doesn.t (appear|exist)|not (listed|documented|found)|isn.t (real|a real|listed|documented)|not (a )?real|no such|doesn.t exist)|Opus 6[^\\n]{0,200}(isn.t (in|a model)|is not (in|a model)|not in the (current )?lineup)|there.s no (Claude )?Opus 6|no (Claude )?Opus 6 (exists|in)|(could not|couldn.t|cannot|unable to|not able to|not)[^\\n]{0,80}(confirm|verif|find)[^\\n]{0,160}Opus 6"},
+  {"id": "one_block", "what": "exactly one fenced block", "legacy": 9, "type": "blocks", "n": 1},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target:", "legacy": 10, "type": "after_block", "starts": "🎯 Target:"},
+  {"id": "context_ok", "what": "every context-window figure stated appears verbatim in params.md", "legacy": 7, "type": "judge"},
+  {"id": "effort_ok", "what": "every effort-parameter value named appears verbatim in params.md", "legacy": 8, "type": "judge"}
+]
+}

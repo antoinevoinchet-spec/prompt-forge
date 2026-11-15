@@ -1,0 +1,22 @@
+{
+"name": "02-coding-agent",
+"query": "I need a prompt for Claude Code. It should fix the session timeout bug in our Express API — sessions expire after 5 minutes instead of 24 hours. The logic lives in src/middleware/session.js.",
+"files": {},
+"checks": [
+  {"id": "reads_agentic", "what": "reads tools-agentic.md", "legacy": 1, "type": "reads", "path": "references/tools-agentic.md"},
+  {"id": "no_visual", "what": "does not read tools-visual.md", "legacy": 1, "type": "not_reads", "pattern": "tools-visual"},
+  {"id": "max_profiles", "what": "reads at most two tools-*.md", "legacy": 2, "type": "max_reads", "pattern": "references/tools-", "n": 2},
+  {"id": "one_block", "what": "exactly one fenced block", "legacy": 3, "type": "blocks", "n": 1},
+  {"id": "path", "what": "prompt names src/middleware/session.js", "legacy": 4, "type": "in_prompt", "regex": "src/middleware/session\\.js"},
+  {"id": "h_scope", "what": "a Scope lock heading", "legacy": 5, "type": "heading", "term": "Scope lock"},
+  {"id": "h_actions", "what": "an Action boundaries heading", "legacy": 6, "type": "heading", "term": "Action boundaries"},
+  {"id": "h_criteria", "what": "a Completion criteria heading", "legacy": 7, "type": "heading", "term": "Completion criteria"},
+  {"id": "progress", "what": "prompt asks for Progress evidence", "legacy": 9, "type": "in_prompt", "regex": "Progress evidence"},
+  {"id": "notice", "what": "agentic notice appended", "legacy": 10, "type": "in_response", "regex": "This prompt is for an agentic tool with real system access"},
+  {"id": "no_budget", "what": "no thinking budget in tokens", "legacy": 12, "type": "not_in_prompt", "regex": "(thinking|reasoning)[ _-]?budget|budget_tokens|\\d[\\d,]*\\s*tokens?\\s+of\\s+(thinking|reasoning)"},
+  {"id": "scope_content", "what": "Scope lock lists what may be touched and what stays unchanged", "legacy": 5, "type": "judge"},
+  {"id": "action_content", "what": "Action boundaries name at least one action to ask about first", "legacy": 6, "type": "judge"},
+  {"id": "criteria_content", "what": "Completion criteria: at least 2 items, each a file that must exist, a command or test that must pass, a value that must equal a stated value, or an endpoint that must return a stated response", "legacy": 8, "type": "judge"},
+  {"id": "no_cot", "what": "prompt does not ask the model to reveal its chain of thought or private reasoning", "legacy": 11, "sec": true, "type": "judge"}
+]
+}

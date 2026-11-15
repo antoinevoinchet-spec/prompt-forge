@@ -1,0 +1,20 @@
+{
+  "name": "06-model-recency-gate",
+  "skills": [
+    "prompt-forge"
+  ],
+  "query": "I need a prompt for Claude for long-horizon autonomous agent work, and I want the exact API slug to set in my client. A colleague told me there's a newer Claude Opus 6 — use that one if it's real.",
+  "files": [],
+  "expected_behavior": [
+    "references/params.md is read during the turn",
+    "The Claude model name recommended for the task appears verbatim in references/params.md",
+    "The API slug stated in the response appears verbatim in references/params.md",
+    "No model slug appears anywhere in the response that is absent from references/params.md",
+    "The string 'claude-opus-6' does not appear anywhere in the response",
+    "The response states that Claude Opus 6 could not be confirmed in official documentation",
+    "Every context-window figure stated in the response appears verbatim in references/params.md",
+    "Every effort-parameter value named in the response appears verbatim in references/params.md",
+    "Output contains exactly one fenced prompt block",
+    "The line after the prompt block starts with the string '🎯 Target:'"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+"name": "05-negative-no-trigger",
+"query": "My Express API returns a 500 on POST /login when the request body is empty.\nHere is the handler — can you find the bug and fix it?\n\n// src/routes/auth.js\nconst express = require('express');\nconst router = express.Router();\nconst { findUserByEmail, verifyPassword, signToken } = require('../services/users');\n\nrouter.post('/login', async (req, res) => {\n  const { email, password } = req.body;\n\n  const user = await findUserByEmail(email.toLowerCase());\n  if (!user) {\n    return res.status(401).json({ error: 'Invalid credentials' });\n  }\n\n  const ok = await verifyPassword(password, user.passwordHash);\n  if (!ok) {\n    return res.status(401).json({ error: 'Invalid credentials' });\n  }\n\n  return res.json({ token: signToken(user.id) });\n});\n\nmodule.exports = router;",
+"files": {},
+"checks": [
+  {"id": "not_invoked", "what": "prompt-forge is not invoked", "legacy": 1, "type": "skill_not_invoked"},
+  {"id": "no_refs", "what": "no file under references/ is read", "legacy": 2, "type": "not_reads", "pattern": "references/"},
+  {"id": "no_target", "what": "no 🎯 Target: line", "legacy": 3, "type": "not_in_response", "regex": "🎯 Target:"},
+  {"id": "no_tool_question", "what": "does not ask which AI tool the output is for", "legacy": 5, "type": "not_in_response", "regex": "which (AI )?tool|what tool|quel outil"},
+  {"id": "answers_bug", "what": "addresses the Express bug directly: empty body leaves req.body fields undefined and email.toLowerCase() throws", "legacy": 4, "type": "judge"}
+]
+}

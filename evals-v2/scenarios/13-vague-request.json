@@ -1,0 +1,11 @@
+{
+"name": "13-vague-request",
+"query": "Can you help me with a prompt? I want it to be really good.",
+"files": {},
+"checks": [
+  {"id": "no_block", "what": "no prompt delivered yet", "type": "blocks", "n": 0},
+  {"id": "asks", "what": "asks one to three questions", "type": "max_questions", "min": 1, "n": 3},
+  {"id": "asks_tool", "what": "asks which tool the prompt is for", "type": "in_response", "regex": "(which|what)[^\\n]{0,60}(tool|model|AI|platform|app)|for (which|what)"},
+  {"id": "no_target_line", "what": "no 🎯 Target: line", "type": "not_in_response", "regex": "🎯 Target:"}
+]
+}

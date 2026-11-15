@@ -1,0 +1,21 @@
+{
+"name": "15-memory-block",
+"query": "Context: we're building a Next.js 15 app with Supabase auth. We decided to use server actions rather than API routes. We already tried redirecting from middleware and it failed because the session cookie wasn't readable there. Now write me a prompt for Cursor to add role-based route protection (admin vs member).",
+"files": {},
+"checks": [
+  {"id": "reads_agentic", "what": "reads tools-agentic.md", "type": "reads", "path": "references/tools-agentic.md"},
+  {"id": "no_visual", "what": "does not read tools-visual.md", "type": "not_reads", "pattern": "tools-visual"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "memory_heading", "what": "a Context (carry forward) block", "type": "in_prompt", "regex": "Context \\(carry forward\\)"},
+  {"id": "memory_early", "what": "that block sits in the first 30% of the prompt", "type": "position", "regex": "Context \\(carry forward\\)", "frac": 0.3},
+  {"id": "keeps_supabase", "what": "carries the Supabase decision", "type": "in_prompt", "regex": "Supabase"},
+  {"id": "keeps_actions", "what": "carries the server actions decision", "type": "in_prompt", "regex": "server actions"},
+  {"id": "keeps_failure", "what": "carries what failed: middleware", "type": "in_prompt", "regex": "middleware"},
+  {"id": "h_scope", "what": "a Scope lock heading", "type": "heading", "term": "Scope lock"},
+  {"id": "h_actions", "what": "an Action boundaries heading", "type": "heading", "term": "Action boundaries"},
+  {"id": "h_criteria", "what": "a Completion criteria heading", "type": "heading", "term": "Completion criteria"},
+  {"id": "notice", "what": "agentic notice appended", "type": "in_response", "regex": "This prompt is for an agentic tool with real system access"},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target: and names Cursor", "type": "after_block", "starts": "🎯 Target:", "contains": "Cursor"},
+  {"id": "no_secret", "what": "prompt holds no key, token or secret", "sec": true, "type": "not_in_prompt", "regex": "sk-[A-Za-z0-9_-]{8,}|api[_-]?key\\s*[:=]\\s*\\S{8,}|Bearer\\s+\\S{12,}|\\b[A-Z][A-Z0-9_]{3,}=\\S{8,}"}
+]
+}

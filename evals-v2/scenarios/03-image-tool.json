@@ -1,0 +1,18 @@
+{
+"name": "03-image-tool",
+"query": "Give me a Midjourney prompt for a hero image: a lone lighthouse in a storm, moody and cinematic, for a website banner.",
+"files": {},
+"checks": [
+  {"id": "reads_visual", "what": "reads tools-visual.md", "legacy": 1, "type": "reads", "path": "references/tools-visual.md"},
+  {"id": "only_visual", "what": "reads neither tools-llm nor tools-agentic", "legacy": 1, "type": "not_reads", "pattern": "tools-(llm|agentic)"},
+  {"id": "one_block", "what": "exactly one fenced block", "legacy": 2, "type": "blocks", "n": 1},
+  {"id": "commas", "what": "at least 4 commas before the first -- flag", "legacy": 3, "type": "before_flag", "min_commas": 4},
+  {"id": "no_sentence_punct", "what": "no . ? ! ; before the first -- flag", "legacy": 4, "type": "before_flag"},
+  {"id": "flags_ok", "what": "every -- flag is documented in params.md", "legacy": 5, "type": "flags_in_params"},
+  {"id": "no_style_raw", "what": "no --style raw anywhere", "legacy": 6, "type": "not_in_response", "regex": "--style\\s+raw"},
+  {"id": "version_ok", "what": "a pinned --v matches params.md", "legacy": 7, "type": "version_flag_in_params"},
+  {"id": "has_no", "what": "prompt holds --no followed by a word", "legacy": 8, "type": "in_prompt", "regex": "--no\\s+\\w+"},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target: and names Midjourney", "legacy": 9, "type": "after_block", "starts": "🎯 Target:", "contains": "Midjourney"},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "legacy": 10, "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"}
+]
+}

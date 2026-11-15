@@ -1,0 +1,18 @@
+{
+"name": "12-gemini",
+"query": "Write me a prompt for Gemini that classifies customer reviews as positive, negative or mixed and returns a table. The reviews will be inserted into a placeholder in the prompt.",
+"files": {},
+"checks": [
+  {"id": "reads_llm", "what": "reads tools-llm.md", "type": "reads", "path": "references/tools-llm.md"},
+  {"id": "only_llm", "what": "reads neither tools-agentic nor tools-visual", "type": "not_reads", "pattern": "tools-(agentic|visual)"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target: and names Gemini", "type": "after_block", "starts": "🎯 Target:", "contains": "Gemini"},
+  {"id": "few_shot", "what": "prompt holds worked examples", "type": "in_prompt", "regex": "example"},
+  {"id": "table", "what": "prompt names the table format", "type": "in_prompt", "regex": "table"},
+  {"id": "slugs_ok", "what": "every model slug stated is in params.md", "type": "slugs_in_params"},
+  {"id": "questions", "what": "at most 3 questions", "type": "max_questions", "n": 3},
+  {"id": "no_labels", "what": "no Framework or Tokens line", "type": "not_in_response", "regex": "⚡ Framework:|💰 Tokens:"},
+  {"id": "context_first", "what": "the reviews placeholder comes before the sentence that states the task, and no further context or data comes after that sentence (output-format rules may follow it)", "type": "judge"},
+  {"id": "no_window_claim", "what": "states no context-window figure unless it appears in params.md", "type": "judge"}
+]
+}

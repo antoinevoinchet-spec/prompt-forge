@@ -1,0 +1,21 @@
+{
+  "name": "01-text-llm",
+  "skills": [
+    "prompt-forge"
+  ],
+  "query": "Write me a prompt for Claude that turns a raw customer support transcript into a structured incident summary for our engineering channel.",
+  "files": [],
+  "expected_behavior": [
+    "Reads references/tools-llm.md and does not read tools-agentic.md or tools-visual.md",
+    "Output contains exactly one fenced prompt block",
+    "The line after the prompt block starts with the string '🎯 Target:' and names Claude",
+    "The generated prompt contains at least one XML tag pair such as <context>, <task>, <constraints> or <output_format>",
+    "The generated prompt fixes the output shape in one of two ways: it names the shape with a concrete noun (sections, bullets, table, JSON, paragraphs), or it gives a literal template listing the fields or sections to produce",
+    "The generated prompt contains a digit immediately followed by a length unit — words, sentences, bullets, characters, or items",
+    "The generated prompt contains no API key, token, secret or environment-variable value",
+    "The response contains no '⚡ Framework:' line and no '💰 Tokens:' line",
+    "No framework name (RTF, CO-STAR, RISEN, CRISPE) appears inside the generated prompt block",
+    "If a Claude model name or API slug is stated, it matches an entry in references/params.md",
+    "The response asks at most 3 clarifying questions"
+  ]
+}

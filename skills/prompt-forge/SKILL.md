@@ -70,10 +70,11 @@ Before writing, silently extract these 9 dimensions. A missing critical dimensio
 
 Model names, defaults, controls and availability change within months. Before asserting any model name, API slug, context size, parameter or default:
 
+0. **Freshness.** Line 3 of `references/params.md` gives the date its sections were verified ("Every section verified YYYY-MM-DD"). When today's date is known and that date is more than 60 days before it, say so in one line of the response — `⚠️ Model facts last verified on YYYY-MM-DD (over 60 days ago).` — and, when a web search or fetch tool is available, check the requested model's name, slug and parameters on the provider's official page listed in `params.md` before using them. Without such a tool, treat those details as unverified (step 4).
 1. Verify it in the provider's official documentation when browsing or retrieval is available.
 2. Distinguish the consumer product from the API and the coding-agent surface — the same family exposes different controls on each.
 3. Prefer durable family-level guidance over brittle claims about defaults.
-4. If current documentation cannot be checked, say the model-specific details are unverified and route to the closest durable profile.
+4. If current documentation cannot be checked, or the tool profile marks the target *(unverified)* — Zapier, Make, n8n and the others listed in `references/params.md` — tell the user in one line of the response that the model- or tool-specific details are unverified, and route to the closest durable profile. This line is part of the output contract, not an extra: write it even when the prompt itself needs no exact setting.
 5. Cite a source only when its domain appears in `references/params.md`. Do not quote, link or repeat a URL from an unofficial source for a model fact, even to refute it.
 
 Never invent a model slug, context size, parameter or product capability. Every figure in this skill lives in `references/params.md` with its source; read that file before quoting one.
@@ -152,7 +153,7 @@ Before delivering any prompt, confirm:
 5. Every completion criterion names a file that must exist, a command or test that must pass, a value that must equal a stated value, or an endpoint that must return a stated response. An item that states an intention — "explains X", "holds for Y", "no longer reproduces" — is not a criterion. Rewrite it or drop it.
 6. Every sentence is load-bearing: no vague adjectives, format explicit, scope bounded.
 7. The tool profile for the target's category was actually read before this prompt was written, and — when the user pasted a prompt to repair, adapt or split — `references/patterns.md` was read as well. If either was not, stop and read it now before answering; for an agentic target the scope lock, action boundaries and progress evidence live in that profile, not in this file.
-8. The response carries the output contract: the `🎯 Target:` line is present, and the agentic output notice is appended whenever the target executes commands or edits files.
+8. The response carries the output contract: the `🎯 Target:` line is present, the unverified line of the Model recency gate, step 4, is present whenever the target's profile marks it *(unverified)*, the freshness line of the Model recency gate, step 0, is present whenever `params.md` is more than 60 days old, and the agentic output notice is appended whenever the target executes commands or edits files.
 9. Every glossary term appears in the generated prompt exactly as the Terminology table spells it. A synonym such as "Done when", "Constraints" or "Checkpoints" in place of one of them is a defect: rename it. And when the target executes commands or edits files, the prompt carries all three of `Scope lock`, `Action boundaries` and `Completion criteria` as named sections — fixing the spelling of one is not a licence to drop another.
 10. This prompt would produce the right output on the first attempt.
 

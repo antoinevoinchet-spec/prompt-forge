@@ -1,0 +1,10 @@
+{
+  "name": "prompt-forge",
+  "displayName": "Prompt Forge",
+  "description": "Writes, repairs and ports prompts for a named AI tool, with model facts re-checked against official documentation every month.",
+  "author": { "name": "Antoine Voinchet", "url": "https://github.com/antoinevoinchet-spec" },
+  "homepage": "https://github.com/antoinevoinchet-spec/prompt-forge",
+  "repository": "https://github.com/antoinevoinchet-spec/prompt-forge",
+  "license": "MIT",
+  "keywords": ["prompt-engineering", "prompts", "skill"]
+}

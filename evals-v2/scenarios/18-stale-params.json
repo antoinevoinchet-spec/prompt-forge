@@ -1,0 +1,14 @@
+{
+"name": "18-stale-params",
+"query": "Write me a prompt for Claude to summarise customer support tickets, and tell me which model slug to set.",
+"files": {},
+"params_verified_days_ago": 75,
+"checks": [
+  {"id": "reads_params", "what": "reads params.md", "type": "reads", "path": "references/params.md"},
+  {"id": "stale_line", "what": "says in one line that the model facts were last verified over 60 days ago, with the date", "type": "in_response", "regex": "(over 60 days|last verified)[^\\n]{0,40}\\d{4}-\\d{2}-\\d{2}"},
+  {"id": "says_unverified", "what": "checks the model online with a web tool that succeeds, or tells the user the model details are unverified", "type": "unverified_or_checked", "regex": "(couldn.t|didn.t|could not|did not|wasn.t able to|unable to)\\s+re-?check|unverified|not verified|could not (verify|confirm)|couldn.t (verify|confirm)|no official|haven.t verified|not been verified"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target:", "type": "after_block", "starts": "🎯 Target:"},
+  {"id": "slug_ok", "what": "an API slug is stated and every slug appears in params.md", "sec": true, "type": "slugs_in_params", "min": 1}
+]
+}

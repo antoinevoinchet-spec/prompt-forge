@@ -11,6 +11,9 @@ import json, math, shutil, subprocess, sys, tempfile, threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pflib  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 _SYNCED_ROOT = Path.home() / ".claude" / "skills" / "synced"
 # Optional: other skills synced to this machine act as competitors. With none, the run has no decoys.
@@ -23,7 +26,7 @@ def stage():
     """Fresh project dir, outside $HOME so ~/.claude/CLAUDE.md is not picked up."""
     work = Path(tempfile.mkdtemp(prefix="pf-trig-"))
     skills = work / ".claude" / "skills"
-    shutil.copytree(ROOT, skills / "prompt-forge", ignore=lambda d, names: [n for n in names if n in SKIP and Path(d) == ROOT])
+    shutil.copytree(pflib.SKILL_ROOT, skills / "prompt-forge", ignore=lambda d, names: [n for n in names if n in SKIP and Path(d) == pflib.SKILL_ROOT])
     decoys = 0
     for d in sorted(SYNCED.iterdir()) if SYNCED else []:
         if d.is_dir() and not d.name.startswith(".") and d.name != "prompt-forge" and (d / "SKILL.md").exists():
@@ -40,7 +43,7 @@ def run_once(work, query):
         cwd=work, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
     timer = threading.Timer(300, p.kill)
     timer.start()
-    triggered, first_tool = False, None
+    triggered, first_tool, refusal = False, None, None
     try:
         for line in p.stdout:
             try:
@@ -49,6 +52,8 @@ def run_once(work, query):
                 continue
             if e.get("type") != "assistant":
                 continue
+            if e["message"].get("stop_reason") == "refusal":   # the provider refused: nothing was tested
+                refusal = (e["message"].get("stop_details") or {}).get("category") or "unknown"
             for c in e["message"]["content"]:
                 if c["type"] != "tool_use":
                     continue
@@ -63,11 +68,12 @@ def run_once(work, query):
     finally:
         timer.cancel()
         p.wait()
-    return triggered, first_tool
+    return triggered, first_tool, refusal
 
 
 def main():
     args = sys.argv[1:]
+    pflib.check_args(args, __doc__, ("--passes", "--workers"))
     passes = int(args[args.index("--passes") + 1]) if "--passes" in args else 3
     workers = int(args[args.index("--workers") + 1]) if "--workers" in args else 6
     ids = [a for a in args if a[:1] in "tn" and a[1:].isdigit()]
@@ -80,7 +86,12 @@ def main():
     bad = 0
     for c in cases:
         res = [f.result() for f in futs[c["id"]]]
-        k = sum(t for t, _ in res)
+        refused = [r for _, _, r in res if r]
+        if refused:   # a refusal reads as "not triggered": without this, an expected no-trigger would pass untested
+            bad += 1
+            print(f"BLOCKED {c['id']}  (provider refusal in {len(refused)}/{passes} passes: {', '.join(sorted(set(refused)))})")
+            continue
+        k = sum(t for t, _, _ in res)
         ok = k >= need if c["expect"] == "trigger" else k <= passes - need
         bad += not ok
         tag = "stable" if k in (0, passes) else "UNSTABLE"

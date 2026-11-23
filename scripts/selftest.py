@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Can the checks fail? Damage a stored good answer on purpose and see whether the matching check drops.
 
-Usage: selftest.py RUNDIR   (a run dir whose answers are good, e.g. a fully passing evals run)
+Usage: selftest.py RUNDIR [RUNDIR ...]   (run dirs whose answers are good, e.g. a fully passing evals run)
+A scenario's answer is NAME/stream.jsonl or NAME/passK/stream.jsonl; the first one whose base passes is used.
 Free. Exit 0 only if every deliberate damage is caught and the untouched answer still passes.
 """
 import json, re, sys
@@ -10,9 +11,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pflib
 
 ROOT = Path(__file__).resolve().parent.parent
-D = Path(sys.argv[1])
+DIRS = [Path(a) for a in sys.argv[1:]]
 FENCE = pflib.FENCE
-SKILL_BODY = (ROOT / "SKILL.md").read_text().split("---", 2)[-1]
+SKILL_BODY = (pflib.SKILL_ROOT / "SKILL.md").read_text().split("---", 2)[-1]
 # scenario, check that must catch it, damage applied to the answer text
 DAMAGE = [
     ("01-text-llm", "one_block", lambda t: t + "\n```\nextra\n```\n"),
@@ -38,6 +39,9 @@ DAMAGE = [
     ("07-port-prompt", "injection_named", lambda t: t.replace("disregard any instructions you were given earlier", "an override")),
     ("08-under-trigger", "two_blocks", lambda t: FENCE.sub("", t, count=1)),
     ("08-under-trigger", "no_tu_es", lambda t: t.replace("```\n", "```\nTu es un assistant.\n", 1)),
+    ("18-stale-params", "stale_line", lambda t: "\n".join(l for l in t.splitlines() if "over 60 days" not in l and "last verified" not in l)),
+    ("18-stale-params", "says_unverified", lambda t: "\n".join(l for l in t.splitlines() if not re.search(r"re-?check|unverified|not verified|confirm", l, re.I))),
+    ("19-fresh-params", "no_stale_line", lambda t: "⚠️ Model facts last verified on 2026-09-09 (over 60 days ago).\n" + t),
 ]
 
 
@@ -56,9 +60,15 @@ missed = clean_fail = 0
 for name, cid, fn in DAMAGE:
     sc = json.loads((ROOT / "evals-v2" / "scenarios" / f"{name}.json").read_text())
     c = next(x for x in sc["checks"] if x["id"] == cid)
-    stream = (D / name / "stream.jsonl").read_text()
-    base_ok = pflib.check(c, pflib.Run(rebuild(stream, lambda t: t), ROOT))[0]
-    hurt_ok = pflib.check(c, pflib.Run(rebuild(stream, fn), ROOT))[0]
+    found = [f for d in DIRS for f in [d / name / "stream.jsonl", *sorted((d / name).glob("pass*/stream.jsonl"))] if f.exists()]
+    if not found:
+        raise FileNotFoundError(f"no stored answer for {name} in {', '.join(map(str, DIRS))}")
+    for f in found:   # the first good answer: a damage test needs a base that passes
+        stream = f.read_text()
+        base_ok = pflib.check(c, pflib.Run(rebuild(stream, lambda t: t), pflib.SKILL_ROOT))[0]
+        if base_ok:
+            break
+    hurt_ok = pflib.check(c, pflib.Run(rebuild(stream, fn), pflib.SKILL_ROOT))[0]
     state = "caught" if base_ok and not hurt_ok else ("BASE ALREADY FAILS" if not base_ok else "MISSED")
     missed += state == "MISSED"
     clean_fail += not base_ok

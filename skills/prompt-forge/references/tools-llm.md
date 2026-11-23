@@ -54,7 +54,7 @@ Do not assume a single universal Claude default. Ask which model is selected onl
 - Thinking cannot be switched off, only lowered to a between-tools floor, and that floor is rejected at the top two effort levels — see `params.md`. Do not write a prompt that assumes a no-thinking mode.
 - Steer tone through the system prompt rather than sampling parameters. The documented 400 on `temperature` / `top_p` / `top_k` is stated for Sonnet 5, not for Sonnet 5.5 or any other current model — see `params.md` before asserting it.
 
-**Fable 5.1 and Mythos 5.1** — long-horizon autonomous work.
+**Fable 5.2 and Mythos 5.2; Fable 5.1 and Mythos 5.1** — long-horizon autonomous work. Fable 5.2 now holds the lineup slot (`params.md`). The bullets below come from the Fable 5.1 guide; the Fable 5.2 guide has not been checked against them yet, so port a Fable 5.1 prompt and re-run its effort sweep rather than assuming every bullet still holds.
 
 - Give a complete, outcome-focused specification with explicit action boundaries and infrastructure suited to long asynchronous runs.
 - For unattended runs, state that the user is not watching and cannot answer mid-task: proceed on reversible in-scope actions, stop only for destructive actions or genuine scope changes.
@@ -87,7 +87,7 @@ Current lineup and slugs: `params.md` → OpenAI. In ChatGPT, availability depen
 - Define completion explicitly. The current flagship can be tentative about when to stop; if further exploration is wanted, say what to explore and what ends it.
 - Use the lowest reasoning effort that meets the quality bar; raise it for work that needs deeper planning or checking. Values and defaults: `params.md`.
 - State tool-use expectations and the evidence the answer must carry.
-- Raw reasoning tokens are not exposed, and the reasoning *summary* parameter is no longer documented — do not tell a user to opt into one. Ask for conclusions, assumptions, evidence and checks in the output contract instead. Reasoning context and mode are API settings, not prompt content; see `params.md`.
+- Raw reasoning tokens are not exposed. A reasoning summary is an API setting the user can turn on (`params.md`), not something to ask for in the prompt. Ask for conclusions, assumptions, evidence and checks in the output contract. Reasoning summary, context and mode are API settings, not prompt content.
 - Control visible length through the output contract, not by asking for less thinking.
 
 ---
@@ -173,8 +173,9 @@ Ask which model is running before writing: Llama, Mistral, Qwen and the Coder va
 - **"GPT-5.x handles dense instruction well — add structure."** Superseded: the current flagship wants less scaffolding, not more.
 - **"Sonnet 5 rejects sampling parameters."** Narrowed, not dropped. The documented 400 on `temperature`, `top_p` and `top_k` is stated on the Sonnet 5 page only; no equivalent line appears for Sonnet 5.5. Steering tone through the system prompt remains the right advice either way — but do not claim the restriction for a current model. See `params.md`.
 - **Sonnet 5 routing generally.** Superseded by Sonnet 5.5, whose effort levels are documented as recalibrated. Move the prompt across and re-run the sweep rather than porting the effort setting.
-- **"GPT-5.6 Sol / Terra / Luna are the balanced and cost tiers."** Superseded. Those slugs have left the current model page; GPT-6.1 Sol and GPT-6 Luna hold those slots and no Terra equivalent is listed. See `params.md`.
-- **"Grok 4.6."** Superseded by Grok 4.7; the slug and cutoff both moved. See `params.md`.
+- **"GPT-5.6 Sol / Terra / Luna are the balanced and cost tiers."** Superseded. Those slugs have left the current model page; the GPT-6 range holds those slots. See `params.md`.
+- **"GPT-6 Astra is the flagship; GPT-6.1 Sol is the balanced tier; no Terra equivalent is listed."** Superseded on 2026-11-23: GPT-6.2 Astra, GPT-6.2 Sol and GPT-6.1 Terra now head the list. See `params.md`.
+- **"Grok 4.6."** Superseded by Grok 4.7 as the recommended model. It reappeared, unlabeled, in the pricing table on 2026-11-23; still route to Grok 4.7. See `params.md`.
 - **"Route to Gemini 3.5 Flash or 2.5 Flash for high-throughput work."** 3.5 Flash is now documented as legacy and the 2.5 family is access-limited to projects with prior usage. Route new builds to the current Flash entries in `params.md`.
 - **"1M context window on MiniMax M2.7."** Wrong, and M2.7 is no longer documented at all — state no context size for any M2.x model. See `params.md`.
 - **"MiniMax temperature must be between 0 and 1."** and **"MiniMax temperature range is `[0, 2]`, default `1`."** Both superseded. Temperature is documented as not supported, ignored, and fixed at 1 on both endpoints. Do not state a range at all — see `params.md`.
@@ -183,6 +184,7 @@ Ask which model is running before writing: Llama, Mistral, Qwen and the Coder va
 - **"Gemini 3.7 Flash is the previous-generation Flash model."** Superseded: 3.7 Flash is no longer listed, and 3.6 Flash now carries the "previous-generation Flash" line. See `params.md`.
 - **"Claude Haiku 4.5 is the fast Haiku option; it has no effort parameter and takes a thinking budget."** Superseded by Haiku 5.5, which holds the lineup slot, defaults to `medium` effort, and rejects `budget_tokens`. Route the prompt across and set an effort level.
 - **"Claude Sonnet 4.6 has its own prompting guide."** It no longer does; the model-specific table lists eight guides and Sonnet 4.6 is not among them. See `params.md`.
-- **"Ask OpenAI for a reasoning summary via the `summary` parameter."** The parameter is no longer documented. See `params.md`.
+- **"The OpenAI `summary` parameter is no longer documented — never mention it."** Reversed on 2026-11-23: it is documented again. See `params.md`.
+- **"Gemini 3.8 Flash is the most intelligent Flash model; Gemini 4 Argon is the flagship."** Superseded on 2026-11-23: 3.8 Flash is now "previous-generation", and Argon is the efficient model of a four-model Gemini 4 range. See `params.md`.
 
 </details>

@@ -9,7 +9,10 @@ Usage: run-evals.py [NN ...]   (no argument = all eight)
 import json, os, subprocess, sys, tempfile, time
 from pathlib import Path
 
+import pflib
+
 ROOT = Path(os.environ.get("PF_ROOT") or Path(__file__).resolve().parent.parent)
+SKILL_ROOT = pflib.skill_root(ROOT)
 # Outside $HOME on purpose: Claude Code walks up parent directories and would load
 # ~/.claude/CLAUDE.md as project instructions, which fires the skill for the wrong reason.
 RUNS = Path(tempfile.mkdtemp(prefix="pf-evals-"))
@@ -28,8 +31,8 @@ def claude(prompt, cwd, extra):
 def stage_skill(dest):
     skill = dest / ".claude" / "skills" / "prompt-forge"
     skill.mkdir(parents=True)
-    for f in ROOT.rglob("*"):
-        rel = f.relative_to(ROOT)
+    for f in SKILL_ROOT.rglob("*"):
+        rel = f.relative_to(SKILL_ROOT)
         if f.is_file() and not (set(rel.parts) & {".git", "runs", "scripts"}) and rel.name != ".gitignore":
             (skill / rel).parent.mkdir(parents=True, exist_ok=True)
             (skill / rel).write_bytes(f.read_bytes())
@@ -60,7 +63,7 @@ def reference_block(transcript):
     if not any(l.startswith("TOOL_CALL: Read") and l.rstrip().endswith("params.md")
                for l in transcript.splitlines()):
         return ""
-    text = (ROOT / "references" / "params.md").read_text()
+    text = (SKILL_ROOT / "references" / "params.md").read_text()
     return f"\n\nFILE references/params.md (full contents, read during the run):\n<params>\n{text}\n</params>"
 
 
@@ -84,6 +87,7 @@ def grade(ev, transcript, cwd):
 
 def main():
     args = sys.argv[1:]
+    pflib.check_args(args, __doc__, ("--regrade",))
     regrade = Path(args[args.index("--regrade") + 1]) if "--regrade" in args else None
     wanted = [a for a in args if a[:1].isdigit()]
     evals = sorted((ROOT / "evals").glob("[0-9][0-9]-*.json"))

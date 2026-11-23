@@ -4,6 +4,26 @@ Versioning lives here rather than in the SKILL.md frontmatter, where `version` i
 
 ## Unreleased
 
+- **The skill says when its model facts are over 60 days old.** Nothing told a user that `references/params.md` had gone stale when the monthly re-check stopped: the skill kept quoting its facts as current. New step 0 of the Model recency gate: when line 3 of `params.md` is more than 60 days old, the response says so in one line and, with a web search or fetch tool, checks the requested model on the provider's official page; without one, those details are reported as unverified. Verification gate point 8 checks the line. Scenarios 18 (facts 75 days old) and 19 (10 days old, no warning) test it. Scenario 18 accepts either outcome the rule allows (a web check that succeeded, or the unverified line) and passed on 2026-11-23 (3 paid passes: two said the details were not re-checked, one checked the models page online).
+
+## 1.9.3 — 2026-11-23
+
+Monthly re-verification of `references/params.md`, 2026-11-23. Midjourney not re-verified (both pages returned HTTP 403).
+
+- **Claude Fable 5.2 (`claude-fable-5-2`) replaces Fable 5.1** in the lineup and in the default-recommendation sentence; Mythos 5.2 added under "All models" (limited availability) — <https://platform.claude.com/docs/en/models/overview>
+- **Effort `xhigh` and `max` lists gain Fable 5.2 and Mythos 5.2**; Fable 5.2 default `high` — <https://platform.claude.com/docs/en/build-with-claude/effort>
+- **Haiku 5.5 refusal categories gain `reasoning_extraction`** — <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5>
+- **Opus 5.5 thinking blocks**: Fable 5.2 and Mythos 5.2 read them on the Claude API and Google Cloud (Google managed); the 2026-08-31 account-date rule and `"drop_block"` are gone, replaced by a prefix check that "might or might not result in a 400 error" — <https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5>
+- **Nine Claude prompting guides** (Fable 5.2 and Mythos 5.2 added) — <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices>
+- **OpenAI flagships now `gpt-6.2-astra`, `gpt-6.2-sol`, `gpt-6.1-terra`, `gpt-6-luna`** (1.05M); `gpt-6-astra` and `gpt-6.1-sol` superseded; `gpt-6-cyber` and `gpt-live-1.1` added; no model marked Deprecated — <https://developers.openai.com/api/docs/models>
+- **OpenAI reasoning**: GPT-6.2 Astra and GPT-6.2 Sol reject `none`; `summary` parameter documented again (`auto`, `concise`, `detailed`); `reasoning.mode` stated for "GPT-5.6 and GPT-6 models" — <https://developers.openai.com/api/docs/guides/reasoning>
+- **OpenAI image models `gpt-image-2.6-sunburst` and `gpt-image-2.6-flare` added** — <https://developers.openai.com/api/docs/guides/image-generation>, <https://developers.openai.com/api/docs/models>
+- **Gemini source URL moved** to `aistudio.google.com/docs/models` (301); Gemini 4 range now `gemini-4-carbon`, `gemini-4-neon`, `gemini-4-hydrogen`, `gemini-4-argon` with "1M tokens" context and "64K / 1M tokens" output; 3.8 Flash now "previous-generation"; `gemini-omni-1.2-flash` and `genie-4` added; `gemini-2.5-flash` and `gemini-2.5-pro` Deprecated; new projects pointed to "Gemini 4 Hydrogen or 3.5 Flash-Lite" — <https://aistudio.google.com/docs/models>
+- **Gemini prompting-strategies URL moved** to `aistudio.google.com/docs/prompting-strategies`, wording unchanged — <https://aistudio.google.com/docs/prompting-strategies>
+- **Grok 4.7 role line now "It is the most capable model we've built."**; retirement notices gone; `grok-4.6` back in the pricing table unlabeled; "reasoning is configurable" no longer stated — <https://docs.x.ai/docs/models>
+- **ElevenLabs: "Eleven v4 Turbo" no longer on the page** — <https://elevenlabs.io/docs/best-practices/prompting>
+- Unchanged: MiniMax, Meshy, Sora shutdown, Claude Sonnet 5 sampling restriction, Sonnet 5.5 `between_tools`, Gemini prompting extracts.
+
 - **Description no longer promises shortening.** The first trigger battery (`evals-v2/`) showed "Shorten this prompt…" never starts the skill (0 of 3), and `SKILL.md` defines no shortening flow: the word lived only in the description. The description now says "Writes, repairs and ports prompts". Claude shortens a prompt well on its own; a real shortening mode would first need the with/without-skill comparison to show it adds something.
 - **The skill asks which tool before writing when the request names none.** Scenario 14 ("rewrite my cold sales emails in a warmer tone") wrote a prompt straight away in 2 of 3 runs, against the hard rule "confirm the target tool before writing". The rule now says to ask even when a text LLM looks likely. The 3-question limit now counts every question mark: one run asked 5, another 4.
 

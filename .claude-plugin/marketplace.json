@@ -1,0 +1,13 @@
+{
+  "name": "antoinevoinchet-prompt-forge",
+  "owner": { "name": "Antoine Voinchet", "url": "https://github.com/antoinevoinchet-spec" },
+  "description": "Prompt Forge: one skill that writes, repairs and ports prompts for a named AI tool.",
+  "plugins": [
+    {
+      "name": "prompt-forge",
+      "source": "./",
+      "description": "Writes, repairs and ports prompts for a named AI tool, with model facts re-checked every month.",
+      "category": "productivity"
+    }
+  ]
+}

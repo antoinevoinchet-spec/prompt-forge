@@ -1,5 +1,5 @@
 """Shared pieces for the v2 runners: parse a headless run, apply mechanical checks."""
-import json, re, shutil, tempfile
+import json, re, shutil, sys, tempfile
 from pathlib import Path
 
 # 3 or more backticks: a prompt that holds a code block is fenced with 4.
@@ -11,6 +11,61 @@ SLUG = re.compile(r"\b(?:claude|gpt|gemini|grok|qwen|llama|mistral|deepseek|mini
 FR_WORDS = set("le la les de des du un une et que qui pour dans est sont avec sur pas ce cette ces il elle vous votre je mon ma mes au aux en ou où par plus ne se sa son ses nous".split())
 REF_FILES = re.compile(r"\b(params\.md|patterns\.md|templates\.md|tools-(?:llm|agentic|visual)\.md)")
 SKIP_STAGE = {".git", "runs", "scripts", "evals", "evals-v2"}
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def skill_root(root):
+    """Where SKILL.md and references/ live: skills/prompt-forge/ in the public plugin layout, else the root."""
+    nested = Path(root) / "skills" / "prompt-forge"
+    return nested if nested.is_dir() else Path(root)
+
+
+SKILL_ROOT = skill_root(ROOT)
+ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def set_params_date(path, iso):
+    """Write `iso` in place of every date on line 3 of a staged params.md (the verification line)."""
+    path = Path(path)
+    lines = path.read_text().splitlines(keepends=True)
+    if len(lines) < 3 or "Every section verified " not in lines[2]:
+        raise ValueError(f"{path}: line 3 is not the verification line")
+    lines[2] = ISO_DATE.sub(iso, lines[2])
+    path.write_text("".join(lines))
+
+WEB_TOOLS = {"WebFetch", "WebSearch"}
+
+
+def successful_web_calls(stream):
+    """Web tool calls in a session, a subagent's included, whose result is not an error."""
+    calls, ok = set(), 0
+    for line in stream.splitlines():
+        try:
+            e = json.loads(line)
+        except ValueError:
+            continue
+        m = e.get("message") if isinstance(e, dict) else None
+        content = m.get("content") if isinstance(m, dict) else None
+        if not isinstance(content, list):
+            continue
+        for c in content:
+            if c.get("type") == "tool_use" and c.get("name") in WEB_TOOLS:
+                calls.add(c.get("id"))
+            elif c.get("type") == "tool_result" and c.get("tool_use_id") in calls and not c.get("is_error"):
+                ok += 1
+    return ok
+
+
+
+def check_args(argv, doc, value_opts=(), flag_opts=()):
+    """Exit before anything runs: --help prints the usage, an unknown option is refused (exit 2)."""
+    if "-h" in argv or "--help" in argv:
+        print(doc.strip())
+        sys.exit(0)
+    bad = [a for a in argv if a.startswith("-") and a not in (*value_opts, *flag_opts)]
+    if bad:
+        sys.stderr.write(f"unknown option: {' '.join(bad)}\n\n{doc.strip()}\n")
+        sys.exit(2)
 
 
 class Run:
@@ -19,12 +74,15 @@ class Run:
     def __init__(self, stream, root):
         self.root = Path(root)
         self.tools, texts, self.cost = [], [], 0.0
+        self.refusal = None   # category of a provider safety refusal (stop_reason "refusal"), not the skill's answer
         for line in stream.splitlines():
             try:
                 e = json.loads(line)
             except ValueError:
                 continue
             if e.get("type") == "assistant":
+                if e["message"].get("stop_reason") == "refusal":
+                    self.refusal = (e["message"].get("stop_details") or {}).get("category") or "unknown"
                 for c in e["message"]["content"]:
                     if c["type"] == "text":
                         texts.append(c["text"])
@@ -32,7 +90,10 @@ class Run:
                         self.tools.append((c["name"], c["input"]))
             elif e.get("type") == "result":
                 self.cost = e.get("total_cost_usd") or 0.0
+                if e.get("stop_reason") == "refusal" and self.refusal is None:
+                    self.refusal = "unknown"
         self.response = "\n".join(texts)
+        self.web_ok = successful_web_calls(stream)
         self.matches = list(FENCE.finditer(self.response))
         self.blocks = [m.group(2) for m in self.matches]
         self.prompt = "\n".join(self.blocks)
@@ -111,6 +172,10 @@ def check(c, r):
         return len(r.blocks) == c["n"], f"{len(r.blocks)} blocks"
     if t == "after_block":
         return _after_block(r, c["starts"], c.get("contains"))
+    if t == "unverified_or_checked":   # the freshness rule: check online when a tool can, else say unverified
+        if r.web_ok:
+            return True, f"{r.web_ok} successful web calls"
+        return re.search(c["regex"], r.response, re.I | re.S) is not None, "no web call, no unverified line"
     if t in ("in_response", "not_in_response"):
         found = re.search(c["regex"], r.response, re.I | re.S) is not None
         return found == (t == "in_response"), ""

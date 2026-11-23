@@ -17,7 +17,7 @@ for d in map(Path, sys.argv[1:]):
         sd = d / s["name"]
         if not (sd / "stream.jsonl").exists() or not (sd / "grade.json").exists():
             continue
-        run = pflib.Run((sd / "stream.jsonl").read_text(), ROOT)
+        run = pflib.Run((sd / "stream.jsonl").read_text(), pflib.SKILL_ROOT)
         old = {g["n"]: g for g in json.loads((sd / "grade.json").read_text())}
         for c in s["checks"]:
             if c["type"] == "judge" or "legacy" not in c:

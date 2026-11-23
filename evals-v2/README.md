@@ -14,10 +14,24 @@ The eight scenarios in `../evals/` check that the skill follows its own format. 
 
 ## Stage 2 — behaviour scenarios (scripts/run-scenarios.py)
 
-`evals-v2/scenarios/NN-*.json`: 17 scenarios, 172 lines. Each line is either a **check** run by code
+`evals-v2/scenarios/NN-*.json`: 19 scenarios, 181 lines. Each line is either a **check** run by code
 (`scripts/pflib.py`: block count, line after the block, headings, regex on the prompt, files read, slugs and
-flags present in `references/params.md`) or a **judge** line given to a second `claude -p` session. 154 are code
+flags present in `references/params.md`) or a **judge** line given to a second `claude -p` session. 163 are code
 checks (90 %), 18 are judged.
+
+- **Staged freshness date.** A scenario with `"params_verified_days_ago": N` runs with a copy of `params.md` whose
+  line 3 dates are set to today minus N days; that date is saved in each pass's `result.json`
+  (`staged_params_verified`) and given to the judge. Scenario 18 (75 days) expects the freshness line of the
+  Model recency gate, step 0, then either a successful online check or the unverified line; scenario 19 (10 days) expects no warning.
+  `--allowedTools Read,Skill` only pre-approves tools: the session still has WebSearch, Bash and Agent, and on
+  2026-11-23 four passes of scenario 18 fetched the models page through a web-fetch subagent, and then rightly did
+  not call the details unverified. A scenario may declare `"tools"`, passed as `--tools`; with `Read,Skill` both
+  passes of scenario 18 stopped on "Prompt is too long" (2026-11-23), so scenario 18 does not use it. Its line
+  `says_unverified` (type `unverified_or_checked`) therefore holds either way the rule allows: a web call that
+  succeeded (a subagent's included), or the unverified line.
+  **Limit:** all scenarios run with web access available, so the no-web branch is tested only when the session
+  chooses not to check online. On 2026-11-23 scenario 18 passed with both branches seen: two passes
+  said the details were not re-checked, one checked the models page online.
 
 - **Rule.** Each scenario runs 3 times. A line holds when it passes in at least 2 of 3 passes. A line tagged
   `sec` (injection, secret, copy of the skill text, invented model slug) must pass in every pass. A scenario passes
@@ -29,7 +43,7 @@ checks (90 %), 18 are judged.
   straight away in 2. Whether asking is required is the owner's call, not the test's.
 - **Calibration** (`scripts/calibrate.py`): the code checks agree with the stored LLM verdicts on 415 of 419 lines;
   the 4 differences are 3 faults of the old grader and 1 judgement call. **Self-test** (`scripts/selftest.py`):
-  23 deliberate damages to good answers, 23 caught.
+  23 deliberate damages to good answers, 23 caught; 26 since scenarios 18 and 19 (2026-11-23).
 - **Old test 04 rewritten.** It no longer counts defects *named in the narration* (the LLM counted differently from
   run to run). It checks that each planted defect is *gone from the produced prompt*: injection line, key,
   "help me with my code", "whatever it takes", chain-of-thought request; and that a Completion criteria section exists.

@@ -1,0 +1,11 @@
+{
+"name": "19-fresh-params",
+"query": "Write me a prompt for Claude to summarise customer support tickets, and tell me which model slug to set.",
+"files": {},
+"params_verified_days_ago": 10,
+"checks": [
+  {"id": "no_stale_line", "what": "no freshness warning when the facts are 10 days old", "type": "not_in_response", "regex": "over 60 days"},
+  {"id": "one_block", "what": "exactly one fenced block", "type": "blocks", "n": 1},
+  {"id": "target_line", "what": "line after the block starts with 🎯 Target:", "type": "after_block", "starts": "🎯 Target:"}
+]
+}

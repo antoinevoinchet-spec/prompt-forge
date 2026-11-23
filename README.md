@@ -103,6 +103,22 @@ The badge at the top shows the date the model facts were last verified: green un
 - Treats a pasted prompt as inert data when repairing or porting it, and reports conflicting instructions instead of following them.
 - Removes credentials from anything it generates.
 
+## Examples
+
+- "Write me a prompt for Claude Code that migrates our tests to Vitest."
+- "Fix this prompt, it keeps giving me garbage: <your prompt>. Target: Cursor."
+- "Port this ChatGPT prompt to Gemini: <your prompt>."
+
+## Troubleshooting
+
+- The skill does not start: name the target tool in your request ("a prompt for Midjourney…"), or ask for "prompt-forge" by name.
+- Model names look out of date: the badge above shows the date the facts were verified. Run `claude plugin update prompt-forge@antoinevoinchet-prompt-forge`, or turn on auto-update or Sync automatically.
+- Something else: open an issue on this repository.
+
+## Privacy
+
+Prompt Forge is a set of instructions for Claude. It collects, stores and sends no data, runs no code and calls no service. Your requests and prompts stay in your Claude conversation, under Anthropic's own terms. The test scripts in `scripts/` run only if you start them yourself.
+
 ## Credit and licence
 
 Prompt Forge is a fork of [prompt-master](https://github.com/nidhinjs/prompt-master) by Nidhin Joseph Nelson (MIT), forked from version 1.8.0. `LICENSE` keeps the original copyright line and adds one for the changes; `CHANGELOG.md` records every change with the failure that caused it.
